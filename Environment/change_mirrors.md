@@ -11,6 +11,7 @@ sudo gedit /etc/apt/sources.list
 ```
 3. 清空 sources.list 文件，并更换新源  
 ```shell
+# 官方源
 # See http://help.ubuntu.com/community/UpgradeNotes for how to upgrade to
 # newer versions of the distribution.
 deb http://us.archive.ubuntu.com/ubuntu/ xenial main restricted
