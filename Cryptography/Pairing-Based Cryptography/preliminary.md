@@ -42,7 +42,7 @@
   - 上述几何解释也适用于具有相同x坐标的两个点P和-P的情形。用一条垂直的线段连接这两个点，可看做是在无穷远点与椭圆曲线相交，因此有P+(-P)=O。
   - 为计算点Q的两倍，在Q点作一条切线并找到与椭圆曲线的另一个交点T，则Q+Q=2Q=-T。
 
-![avatar](.\pic\elliptic_curve.jpg)  
+![elliptic_curve](.\pic\elliptic_curve.jpg)  
 
 - 加法规则的代数描述
 
