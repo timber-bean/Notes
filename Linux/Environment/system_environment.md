@@ -141,3 +141,13 @@ deb-src http://mirrors.163.com/debian wheezy main non-free contrib
 ```
 3. 开始更新  
 与ubuntu的步骤4一致。  
+
+# 更改文件夹权限
+## 更改单个文件权限
+```shell
+sudo chmod 777 /xxx/test.txt
+```
+## 更改文件夹及子文件权限
+```shell
+sudo chmod 777 -R /xxx/yyy/
+```
