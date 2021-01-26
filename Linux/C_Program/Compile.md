@@ -37,3 +37,42 @@ gcc -o demo demo.c
 这是通过gcc 的参数"-Wl,-rpath,"指定(如例3所示)。当指定多个动态库搜索路径时，路径之间用冒号"："分隔)  
 * 默认的动态库搜索路径/lib  
 * 默认的动态库搜索路径/usr/lib  
+
+### gcc编译、运行时找不到文件怎么办
+自己写的头文件、库有时候需要给其他的代码用，就需要其他代码能找得到它，接下来阐述能让其他程序找到它的方法。  
+**编译找不到头文件**  
+* 如果权限足够大  
+    * 可以把自己的头文件放到/usr/include/或者/usr/local/include/下。  
+    * 可以修改/etc/profile文件，添加如下内容：
+    ```shell
+    #gcc找到头文件的路径
+    C_INCLUDE_PATH=$C_INCLUDE_PATH:/MyInclude
+    export C_INCLUDE_PATH
+
+    #g++找到头文件的路径
+    CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:/MyInclude
+    export CPLUS_INCLUDE_PATH
+    ```
+* 如果权限仅限于当前用户  
+    * 修改~/.bashrc文件，添加和/etc/profile文件一样的内容。  
+**编译找不到静态库、动态库**  
+* 如果权限足够大  
+    * 可以把自己的库文件放到/usr/lib/或者/usr/local/lib/下。  
+    * 可以修改/etc/profile文件，添加如下内容：
+    ```shell
+    #找到库的路径
+    LIBRARY_PATH=$LIBRARY_PATH:/MyLib
+    export LIBRARY_PATH
+    ```
+* 如果权限仅限于当前用户  
+    * 修改~/.bashrc文件，添加和/etc/profile文件一样的内容。  
+**运行时找不到静态库、动态库**  
+* 如果权限足够大  
+    * 可以修改/etc/profile文件，添加如下内容：
+    ```shell
+    #找到库的路径
+    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/MyLib
+    export LD_LIBRARY_PATH
+    ```
+* 如果权限仅限于当前用户  
+    * 修改~/.bashrc文件，添加和/etc/profile文件一样的内容。
