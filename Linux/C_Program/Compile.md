@@ -10,18 +10,18 @@ gcc -o demo demo.c
 * 找gcc的环境变量：C_INCLUDE_PATH，CPLUS_INCLUDE_PATH，OBJC_INCLUDE_PATH  
 * 找内定目录  
 
-/usr/include  
-/usr/local/include  
-/usr/lib/gcc-lib/i386-linux/2.95.2/include  
-/usr/lib/gcc-lib/i386-linux/2.95.2/../../../../include/g -3  
-/usr/lib/gcc-lib/i386-linux/2.95.2/../../../../i386-linux/include  
+    * /usr/include  
+    * /usr/local/include  
+    * /usr/lib/gcc-lib/i386-linux/2.95.2/include  
+    * /usr/lib/gcc-lib/i386-linux/2.95.2/../../../../include/g -3  
+    * /usr/lib/gcc-lib/i386-linux/2.95.2/../../../../i386-linux/include  
 
-库文件但是假如装gcc的时候，是有给定的prefix的话，那么就是  
+    * 库文件但是假如装gcc的时候，是有给定的prefix的话，那么就是  
 
-/usr/include  
-prefix/include  
-prefix/xxx-xxx-xxx-gnulibc/include  
-prefix/lib/gcc-lib/xxxx-xxx-xxx-gnulibc/2.8.1/include  
+    * /usr/include  
+    * prefix/include  
+    * prefix/xxx-xxx-xxx-gnulibc/include  
+    * prefix/lib/gcc-lib/xxxx-xxx-xxx-gnulibc/2.8.1/include  
 
 **库文件**  
 * gcc会去找-L  
