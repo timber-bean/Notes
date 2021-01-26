@@ -1,4 +1,5 @@
 # 常用的系统命令
+## 基本命令
 ```shell
 #新建文件夹、文件
 mkdir /usr/asdf
@@ -18,4 +19,9 @@ mv /etc/apt/ /etc/bpt/
 #删除文件、文件夹
 rm /etc/apt/sources.list
 rm -rf /etc/apt/
+```
+
+## 其他常用命令
+### 压缩、解压
+```shell
 ```
