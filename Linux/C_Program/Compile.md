@@ -16,7 +16,7 @@ gcc -o demo demo.c
     * /usr/lib/gcc-lib/i386-linux/2.95.2/../../../../include/g -3  
     * /usr/lib/gcc-lib/i386-linux/2.95.2/../../../../i386-linux/include  
 
-    * **假如装gcc的时候，是有给定的prefix的话，那么就是**  
+* 假如装gcc的时候，是有给定的prefix的话，那么内定目录就是  
 
     * /usr/include  
     * prefix/include  
