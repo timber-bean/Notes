@@ -151,3 +151,24 @@ sudo chmod 777 /xxx/test.txt
 ```shell
 sudo chmod 777 -R /xxx/yyy/
 ```
+
+# 添加新用户
+## 添加新用户
+```shell
+adduser xxx
+输入密码
+```
+## 为新用户添加sudo权限
+```shell
+vim /etc/sudoers
+```
+在
+```shell
+# User privilege specification
+root   ALL=(ALL:ALL) ALL
+```
+添加一行
+```shell
+xxx ALL=(ALL:ALL) ALL
+```
+保存退出即可。
