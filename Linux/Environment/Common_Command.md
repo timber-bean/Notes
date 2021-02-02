@@ -1,5 +1,12 @@
 # 基本命令
 ```shell
+#列出文件夹下的文件
+ls
+#列出文件夹下包括隐藏文件的所有文件
+ls -a
+#列出文件夹下的文件及其权限
+ls -l
+
 #新建文件夹、文件
 mkdir /usr/asdf
 touch /usr/test.txt
