@@ -73,6 +73,6 @@ zip test.zip test.file(待压缩文件)
 unzip test.zip
 
 #.rar（压缩、解压）
-rar a test.rar test.file
+rar a test.rar test.file(待压缩文件)
 rar x test.rar
 ```
