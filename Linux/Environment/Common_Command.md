@@ -48,4 +48,31 @@ screen -S session_name -X quit
 # 其他常用命令
 ## 压缩、解压
 ```shell
+#.tar（压缩、解压）
+tar -cf test.tar teat.file(待压缩文件)
+tar -xf test.tar -C ./test(解压至)
+
+#.gz（压缩、解压）
+gzip test.file
+gunzip test.gz
+
+#.tar.gz（压缩、解压）
+tar -zcf test.tar.gz test.file(待压缩文件)
+tar -zxf test.tar.gz -C ./test(解压至)
+
+#.bz2（压缩、解压）
+bzip2 test.file
+bzip2 -d test.bz2
+
+#.tar.bz2（压缩、解压）
+tar -jcf test.tar.bz2 test.file(待压缩文件)
+tar -jxf test.tar.bz2 -C ./test(解压至)
+
+#zip（压缩、解压）
+zip test.zip test.file(待压缩文件)
+unzip test.zip
+
+#.rar（压缩、解压）
+rar a test.rar test.file
+rar x test.rar
 ```
