@@ -69,7 +69,8 @@ tar -jcf test.tar.bz2 test.file(待压缩文件)
 tar -jxf test.tar.bz2 -C ./test(解压至)
 
 #zip（压缩、解压）
-zip test.zip test.file(待压缩文件)
+zip -q -r test.zip test.file(待压缩文件)
+zip -dv test.zip a.c #从压缩文件 test.zip 中删除文件 a.c
 unzip test.zip
 
 #.rar（压缩、解压）
