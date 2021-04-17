@@ -52,21 +52,25 @@ screen -S session_name -X quit
 tar -cf test.tar teat.file(待压缩文件)
 tar -xf test.tar -C ./test(解压至)
 
-#.gz（压缩、解压）
-gzip test.file
-gunzip test.gz
-
 #.tar.gz（压缩、解压）
 tar -zcf test.tar.gz test.file(待压缩文件)
 tar -zxf test.tar.gz -C ./test(解压至)
 
-#.bz2（压缩、解压）
-bzip2 test.file
-bzip2 -d test.bz2
-
 #.tar.bz2（压缩、解压）
 tar -jcf test.tar.bz2 test.file(待压缩文件)
 tar -jxf test.tar.bz2 -C ./test(解压至)
+
+#.tar.lz（解压）
+lzip -d gmp-6.1.2.tar.lz
+tar -xvf gmp-6.1.2.tar
+
+#.gz（压缩、解压）
+gzip test.file
+gunzip test.gz
+
+#.bz2（压缩、解压）
+bzip2 test.file
+bzip2 -d test.bz2
 
 #zip（压缩、解压）
 zip -q -r test.zip test.file(待压缩文件)
