@@ -114,7 +114,7 @@ C++11中，共有四种存储方式，分别是，自动存储、静态存储、
 
 ## 线程存储
 
-定义：使用thread_local使命的变量。
+定义：使用thread_local声明的变量。
 
 持续性：和所属线程的生命周期一样长。
 
@@ -142,15 +142,84 @@ C++11中，共有四种存储方式，分别是，自动存储、静态存储、
 
 必须采取下述措施之一：
 
-在函数声明前加关键字inline。
+* 在函数声明前加关键字inline。
 
-在函数定义前加关键字inline。
+* 在函数定义前加关键字inline。
 
 ## 内联与宏
 
 C语言使用预处理语句#define来提供宏——内联代码的原始实现。
 
 **区别**：内联函数是按值传递参数，而宏只是进行文本替换。
+
+# 友元
+
+友元可以访问类的所有私有（private）成员和保护（protected）成员。友元的分类：
+
+* 友元函数
+* 友元类
+* 友元成员函数
+
+## 友元函数
+
+友元函数的定义需要放在类声明中，并在原型声明前加关键字friend。友元函数虽在类中声明，但是友元函数不是类的成员函数。
+
+```C++
+class Box{
+   double width;
+public:
+   friend void printWidth( Box box );
+   void setWidth( double wid );
+};
+
+void Box::setWidth( double wid ){
+    width = wid;
+}
+ 
+// printWidth() 不是任何类的成员函数
+void printWidth( Box box ){
+   cout << "Width of box : " << box.width <<endl;
+}
+```
+
+由于友元函数不是成员函数，因此没有this指针，因此对参数的需求如下：
+
+* 要访问非static成员时，需要对象做参数；
+* 要访问static成员或全局变量时，则不需要对象做参数；
+* 如果做参数的对象是全局对象，则不需要对象做参数。
+
+## 友元类
+
+它的出现是因为，存在两个类，它们之间无法通过公有继承或是保护继承、私有继承的方式完成任务。声明式，在类前加关键字friend即可，它可以位于公有、私有或者保护部分，无关紧要。
+
+```C++
+#ifndef TV_H_
+#define TV_H_
+
+class Tv{
+public:
+    friend class Remote; //友元类
+    enum{Off, On};
+    
+    Tv(int s = Off, int vol = 50):state(s),volume(vol){}
+    bool volup();
+private:
+    int state;
+    int volume;
+}
+class Remote{
+private:
+    int mode;
+public:
+    Remote(int m = Tv::TV):mode(m){}
+    bool volup(Tv & t){return t.volup();}
+}
+#endif
+```
+
+## 友元成员函数
+
+它的出现，可以使得仅让特定的类成员成为另一个类的友元，而不必让整个类成为友元。
 
 # 引用
 
@@ -209,6 +278,16 @@ void swapp(int *p, int *q){ //使用指针
 * 应把类型引用和类型本身看作同一特征标。
 * 函数类型的区别，不能成为函数多态的前提。
 
+## 运算符重载
+
+重载的运算符是带有特殊名称的函数，函数名是由关键字 operator 和其后要重载的运算符符号构成。需要注意的是：
+
+* 重载后的运算符必须至少有一个操作数是用户定义的类型。
+* 重载的运算符可以是在**类外定义的普通函数，也可以是类的成员函数或友元函数**。最好是后两者。
+* 大部分的运算符可以重载，**成员访问符”.”，成员指针访问运算符”.\*“，作用域运算符“::”，条件运算符”?:”，长度运算符“sizeof”**。
+* 重载不改变操作对象的个数，即不能违反运算符原来的句法规则。
+* 重载不改变运算符的优先级。
+
 ## 函数模板
 
 是通用的函数描述，是使用泛型来定义函数。通过将类型作为函数参数传递给模板，可是编译器生成该类型的函数。如下代码建立了一个交换模板：
@@ -223,9 +302,7 @@ void Swap(AnyType &a, AnyType &b){
 }
 ```
 
-### 函数模板的重载
-
-被重载的模板函数，特征标必须不同。
+**重载**：被重载的模板函数，特征标必须不同。
 
 # 类
 
@@ -308,7 +385,58 @@ Stock::~Stock(){ //析构函数
 ```C++
 const Stock & Stock::topval(const Stock & s) const{
     if(s.total_val>total_val) return s;
-    else return *this; //这里返回的是对象本身，因为this是对象的地址
+    else return *this; //这里返回的是*this，即对象本身，而this是对象的地址
 }
 ```
+
+## 对象数组
+
+要创建类对象数组，这个类必须有默认构造函数。步骤如下：
+
+* 使用默认构造函数创建数组元素；
+* 花括号中的构造函数将创建临时对象；
+* 将临时对象的内容复制到相应的元素中。
+
+## 指向类的指针
+
+一个指向 C++ 类的指针与指向结构的指针类似，访问指向类的指针的成员，需要使用成员访问运算符 **->**，就像访问指向结构的指针一样。必须在使用指针之前，对指针进行初始化。
+
+# 继承
+
+类继承能够从已有的类派生出新的类，而派生类继承了原有类的特征，包括方法。类继承可以允许开发者只提供新特性，甚至不需要访问源代码就可以派生出类。类继承分为三类，公有继承、保护继承以及私有继承。
+
+## 公有继承
+
+公有继承中，基类的公有成员将成为派生类的公有成员；基类的私有部分也将成为派生类的一部分，不过只能通过**基类的公有和保护方法**访问。公有继承使用冒号+关键字public声明。
+
+```C++
+class RatedPlayer : public TableTennisplayer{
+private:
+    int rating;
+public:
+    RatedPlayer(unsigned int r = 0, const string  & fn = "none", const string  & ln = "none");
+    RatedPlayer(unsigned int r, const TableTennisplayer(fn, ln)); //使用TableTennisplayer参数
+};
+//TableTennisplayer(fn, ln)是成员初始化列表
+RatedPlayer::RatedPlayer(unsigned int r, const string  & fn, const string  & ln) : TableTennisplayer(fn, ln){
+    rating = r;
+}
+```
+
+公有继承中，派生类不能直接访问基类的私有成员，必须通过基类的方法进行访问。**派生类的构造函数必须使用基类构造函数。**
+
+要点：
+
+* 首先创建基类对象；
+* 派生类构造函数应通过成员初始化列表将基类信息传递给基类构造函数；
+* 派生类构造函数应初始化派生类新增的数据成员。
+
+公有继承是最常用的方式，其派生类对象也是一个基类对象，可以对基类对象执行的任何操作，也可以对派生类对象执行。
+
+### 多态公有继承
+
+希望同一个方法在派生类和基类中的行为是不同的。两种方式可实现：
+
+* 在派生类中重新定义基类的方法；
+* 虚方法。
 
