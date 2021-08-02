@@ -27,6 +27,7 @@
 题目25：奇怪的打印机（动态规划）
 题目26：数组中最大数对和的最小值（排序+贪心）
 题目27：避免洪水泛滥（贪心+二分）
+题目28：二维数组中的查找（线性查找）
 =========================================*/
 
 
@@ -1566,5 +1567,28 @@ public:
             ans[i] = -1; //当天记录为雨天
         }
         return ans;
+    }
+};
+
+/*-------------------------------
+| 题目28：二维数组中的查找（线性查找）
+| 在一个 n * m 的二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。
+| 请完成一个高效的函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
+-------------------------------*/
+/* 线性查找 */
+class Solution {
+public:
+    bool findNumberIn2DArray(vector<vector<int>>& matrix, int target) {
+        //判空直接返回false
+        if(matrix.empty()) return false;
+
+        int i = 0, j = matrix[0].size() - 1;
+        //从矩阵右上角开始查找，比当前元素小，列数向前移；比当前元素大，行数向下移
+        while( i < matrix.size() && j >= 0){
+            if(target == matrix[i][j]) return true;
+            else if(target < matrix[i][j]) j--;
+            else i++;
+        }
+        return false; //找不到就返回false
     }
 };
