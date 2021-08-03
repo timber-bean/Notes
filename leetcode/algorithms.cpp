@@ -28,6 +28,8 @@
 题目26：数组中最大数对和的最小值（排序+贪心）
 题目27：避免洪水泛滥（贪心+二分）
 题目28：二维数组中的查找（线性查找）
+题目29：最短无序连续子数组（双指针+线性扫描）
+题目30：矩阵中的路径（dfs+剪枝）
 =========================================*/
 
 
@@ -1590,5 +1592,60 @@ public:
             else i++;
         }
         return false; //找不到就返回false
+    }
+};
+
+/*-------------------------------
+| 题目29：最短无序连续子数组（双指针+线性扫描）
+| 给你一个整数数组 nums ，你需要找出一个 连续子数组 ，如果对这个子数组进行升序排序，那么整个数组都会变为升序排序。
+| 请你找出符合题意的 最短 子数组，并输出它的长度。
+-------------------------------*/
+/* 双指针+线性扫描 */
+class Solution {
+public:
+    int findUnsortedSubarray(vector<int>& nums) {
+        int n = nums.size();
+        //right和left分别从两端开始遍历
+        int max = INT_MIN, right = -1;
+        int min = INT_MAX, left = -1;
+        for(int i=0;i<n;i++){
+            //找最右侧的无序点。随着指针右移，如果是有序，max应当不断小于下一个数
+            if(max > nums[i]) right = i;
+            else max = nums[i];
+
+            //找最左侧的无序点。随着指针左移，如果是有序，min应当不断大于下一个数
+            if(min < nums[n - i - 1]) left = n - i - 1;
+            else min = nums[n - i -1];
+        }
+        //如果是有序数组，right和left的值不会被改变
+        return right == -1 ? 0 : right - left + 1;
+    }
+};
+
+/*-------------------------------
+| 题目30：矩阵中的路径（dfs+剪枝）
+| 给定一个 m x n 二维字符网格 board 和一个字符串单词 word 。如果 word 存在于网格中，返回 true ；否则，返回 false 。
+| 单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。
+-------------------------------*/
+/* dfs+剪枝 */
+class Solution {
+public:
+    bool findword(vector<vector<char>>& board, string word, int i, int j, int k){
+        //限制条件
+        if(i>=board.size() || j>=board[0].size() || i<0 || j<0 || word[k] != board[i][j]) return false;
+        if(k == word.size()-1) return true; //找到word就返回true
+        board[i][j] = '\0'; //对找过的进行标记
+        bool res = findword(board, word, i+1, j, k+1) || findword(board, word, i-1, j, k+1) || findword(board, word, i, j+1, k+1) || findword(board, word, i, j-1, k+1);
+        board[i][j] = word[k]; //由于传递的是引用，使用完需要复原
+        return res;
+    }
+    bool exist(vector<vector<char>>& board, string word) {
+        for(int i=0;i<board.size();i++){
+            for(int j=0;j<board[0].size();j++){
+                //dfs搜索到了就返回true，否则继续找
+                if(findword(board, word, i, j, 0)) return true;
+            }
+        }
+        return false;
     }
 };
