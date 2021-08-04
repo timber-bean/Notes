@@ -26,10 +26,12 @@
 题目24：前K个高频单词（哈希表+优先队列）
 题目25：奇怪的打印机（动态规划）
 题目26：数组中最大数对和的最小值（排序+贪心）
-题目27：避免洪水泛滥（贪心+二分）
+题目27：避免洪水泛滥（贪心+二分查找）
 题目28：二维数组中的查找（线性查找）
 题目29：最短无序连续子数组（双指针+线性扫描）
 题目30：矩阵中的路径（dfs+剪枝）
+题目31：有效三角形的个数（排序+双指针）
+题目32：重建二叉树（迭代）
 =========================================*/
 
 
@@ -1351,7 +1353,7 @@ public:
 
 
 /*-------------------------------
-| 题目22：x 的平方根
+| 题目22：x 的平方根（袖珍计算器算法、二分查找、牛顿迭代）
 | 在不使用 math 库中的 sqrt() 函数的情况下，实现 int sqrt(int x) 函数。
 | 计算并返回 x 的平方根，其中 x 是非负整数。
 | 由于返回类型是整数，结果只保留整数的部分，小数部分将被舍去。
@@ -1381,7 +1383,7 @@ public:
                 ans = mid;
                 l = mid + 1; // 小了左边 +1
             } else if((long long)mid * mid > x) {
-                r = mid - 1; // 小了右边 -1
+                r = mid - 1; // 大了右边 -1
             } else {
                 ans = mid;
                 break; // 恰好相等的时候就不用再算了
@@ -1532,7 +1534,7 @@ public:
 };
 
 /*-------------------------------
-| 题目27：避免洪水泛滥（贪心+二分）
+| 题目27：避免洪水泛滥（贪心+二分查找）
 | 你的国家有无数个湖泊，所有湖泊一开始都是空的。当第 n 个湖泊下雨的时候，如果第 n 个湖泊是空的，那么它就会装满水，否则这个湖泊会发生洪水。你的目标是避免任意一个湖泊发生洪水。
 | 给你一个整数数组 rains ，其中：
 | rains[i] > 0 表示第 i 天时，第 rains[i] 个湖泊会下雨。
@@ -1647,5 +1649,80 @@ public:
             }
         }
         return false;
+    }
+};
+
+/*-------------------------------
+| 题目31：有效三角形的个数（排序+双指针）
+| 给定一个包含非负整数的数组，你的任务是统计其中可以组成三角形三条边的三元组个数。
+-------------------------------*/
+/* 排序+双指针 */
+class Solution {
+public:
+    int triangleNumber(vector<int>& nums) {
+        if(nums.size()<3) return 0;
+        int result = 0;
+        sort(nums.begin(),nums.end()); //先排序
+        for(int i=0; i<nums.size(); i++){
+            int k=i;
+            for(int j=i+1; j<nums.size(); j++){
+                //两边和大于第三边
+                while(k+1<nums.size() && nums[k+1]<nums[i] + nums[j]){
+                    k++;
+                }
+                //max防止k-j出现负数影响结果，负数那些是重复的
+                result = result + max(k - j, 0);
+            }
+        }
+        return result;
+    }
+};
+
+/*-------------------------------
+| 题目32：重建二叉树（迭代）
+| 输入某二叉树的前序遍历和中序遍历的结果，请构建该二叉树并返回其根节点。
+| 假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
+-------------------------------*/
+/* 迭代 */
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        //前序遍历为空时，树也为空
+        if (preorder.empty()) {
+            return nullptr;
+        }
+        TreeNode* root = new TreeNode(preorder[0]); //前序遍历的第一个元素是根节点
+        stack<TreeNode*> stk; //栈，用于存储父节点
+        stk.push(root); //先把根节点压入栈
+        int inorderIndex = 0;
+        for (int i = 1; i < preorder.size(); ++i) {
+            int preorderVal = preorder[i];
+            TreeNode* node = stk.top();
+            //栈顶值如果和中序遍历不匹配，则意味着这是当前节点的左孩子
+            if (node->val != inorder[inorderIndex]) {
+                node->left = new TreeNode(preorderVal);
+                stk.push(node->left);
+            } else {
+                //匹配时，意味着当前节点已经是左子树的最左叶子节点了
+                while (!stk.empty() && stk.top()->val == inorder[inorderIndex]) {
+                    node = stk.top();
+                    stk.pop();
+                    ++inorderIndex; //在中序遍历的数组中前移
+                }
+                //弹出栈后，将该元素定义为当前节点的右孩子，并入栈
+                node->right = new TreeNode(preorderVal);
+                stk.push(node->right);
+            }
+        }
+        return root;
     }
 };

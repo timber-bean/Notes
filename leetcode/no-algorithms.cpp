@@ -29,43 +29,6 @@
 | 编写一个方法，将 B 合并入 A 并排序。
 | 初始化 A 和 B 的元素数量分别为 m 和 n。
 -------------------------------*/
-/* 我的方法——用一个辅助数组存放A与B合并后的有序数组 */
-void merge(int* A, int ASize, int m, int* B, int BSize, int n){
-    int* C;
-    C = (int *)malloc(ASize*sizeof(int));
-    int i=0,j=0,k=0;
-    int label;
-    label = m+n;
-    int diff;
-    if(n>0){
-        for(label;label>0;label--){
-            if(i<m && j<n){
-                diff = *(A+i) - *(B+j);
-                if(diff<0){
-                    *(C+k) = *(A+i);
-                    i++;
-                    k++;
-                }else if(diff>=0){
-                    *(C+k) = *(B+j);
-                    j++;
-                    k++;
-                }
-            }else if(i>=m && j<n){
-                *(C+k) = *(B+j);
-                j++;
-                k++;
-            }else if(i<m && j>=n){
-                *(C+k) = *(A+i);
-                i++;
-                k++;
-            }
-        }
-        for(i=0;i<(m+n);i++){
-            *(A+i) = *(C+i);
-        }
-    }else{}
-}
-
 /* 题解——比较A与B中的元素，将最大的元素插入A的最后，以此类推 */
 class Solution {
 public:
@@ -142,7 +105,6 @@ public:
 | 输入一个正整数 target ，输出所有和为 target 的连续正整数序列（至少含有两个数）。
 | 序列内的数字由小到大排列，不同序列按照首个数字从小到大排列。
 -------------------------------*/
-/* 我的方法 —— 奇怪的暴力解决法 */
 /* 通过规律暴力解决 */
 class Solution {
 public:
@@ -191,46 +153,6 @@ public:
 | 请定义一个队列并实现函数 max_value 得到队列里的最大值，要求函数max_value、push_back 和 pop_front 的均摊时间复杂度都是O(1)。
 | 若队列为空，pop_front 和 max_value 需要返回 -1
 -------------------------------*/
-
-/* 我的方法——用数组代替队列 */
-class MaxQueue {
-private:
-    int q[10000];//以数组代替队列
-    int start=0,end=0;//记录首尾的位置
-public:
-    MaxQueue() {
-    }
-    
-    int max_value() {
-        int i=0,max_temp=-1;
-        if(end>0){//保证队列非空
-            for(i;i<end;i++){
-                if(q[i]>max_temp){
-                    max_temp = q[i];
-                }
-            }
-        }
-        return max_temp;
-    }
-    
-    void push_back(int value) {
-        q[end++] = value;//压入新元素
-    }
-    
-    int pop_front() {
-        int front=-1;
-        int i=0;
-        if(end>0){//保证队列非空
-            front = q[0];
-            for(i=0;i<end;i++){
-                q[i] = q[i+1];//调整队列
-            }
-            end--;//缩减队列长度
-        }
-        return front;
-    }
-};
-
 /* 题解——双端队列 */
 class MaxQueue {
     queue<int> q;
@@ -273,24 +195,6 @@ public:
 | 如果你最多只允许完成一笔交易（即买入和卖出一支股票），设计一个算法来计算你所能获取的最大利润。
 | 注意你不能在买入股票前卖出股票。
 -------------------------------*/
-
-/* 我的方法——暴力求解 */
-class Solution {
-public:
-    int maxProfit(vector<int>& prices) {
-        int profit=0;//利润
-        int profit_temp=0;
-        int i,j;
-        for(i=0;i<prices.size();i++){
-            for(j=i+1;j<prices.size();j++){
-                profit_temp = prices[j] - prices[i];
-                if(profit_temp>profit) profit = profit_temp;
-            }
-        }
-        return profit;
-    }
-};
-
 /* 题解——一次遍历 */
 class Solution {
 public:
@@ -693,25 +597,6 @@ public:
 | 给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那两个整数，并返回他们的数组下标。
 | 你可以假设每种输入只会对应一个答案。但是，数组中同一个元素不能使用两遍。
 -------------------------------*/
-/* 暴力法 */
-class Solution {
-public:
-    vector<int> twoSum(vector<int>& nums, int target) {
-        vector<int> ans(2); // 用于记录两个下标
-        for(int i=0;i<nums.size();i++){
-            // 遍历全部元素
-            for(int j=i+1;j<nums.size();j++){
-                if(nums[i]+nums[j]==target){
-                    ans[0] = i;
-                    ans[1] = j;
-                    break;
-                } 
-            }
-        }
-        return ans;
-    }
-};
-
 /* hash表 */
 class Solution {
 public:
@@ -773,27 +658,6 @@ public:
 | 找出那个只出现了一次的元素。
 | 你的算法应该具有线性时间复杂度，且不使用额外空间。 
 -------------------------------*/
-/* 我的方法——时间空间过大 */
-class Solution {
-public:
-    int singleNumber(vector<int>& nums) {
-        int ans = 0; // 用于记录答案
-        for(int i=0;i<nums.size();i++){
-            int j=i+1,flag=0; // flag 用于记录是否是最后一个元素被删除
-            ans=nums[i];
-            for(;j<nums.size();j++){ // 从 ans 元素向后遍历
-                if(nums[j]==ans){ // 用重复的就删
-                    if(j==nums.size()-1) flag=1;
-                    nums.erase(nums.begin()+j);
-                    break;
-                }
-            }
-            if(j==nums.size() && flag==0) break;
-        }
-        return ans;
-    }
-};
-
 /* 位运算——高效 */
 class Solution {
 public:
@@ -812,24 +676,6 @@ public:
 | 输入:nums = [1,1,1], k = 2
 | 输出: 2 , [1,1] 与 [1,1] 为两种不同的情况。
 -------------------------------*/
-/* 枚举 */
-class Solution {
-public:
-    int subarraySum(vector<int>& nums, int k) {
-        int count = 0; // 记录总个数
-        for (int start = 0; start < nums.size(); ++start) {
-            int sum = 0; // 记录每一个和
-            for (int end = start; end >= 0; --end) { // 从当前元素向前遍历
-                sum += nums[end];
-                if (sum == k) {
-                    count++;
-                }
-            }
-        }
-        return count;
-    }
-};
-
 /* 前缀和+hash表 */
 class Solution {
 public:
