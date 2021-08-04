@@ -1713,6 +1713,7 @@ public:
             } else {
                 //匹配时，意味着当前节点已经是左子树的最左叶子节点了
                 while (!stk.empty() && stk.top()->val == inorder[inorderIndex]) {
+                    //注意，需要先保存node，再弹栈顶，这样才能把右孩子放入正确的节点
                     node = stk.top();
                     stk.pop();
                     ++inorderIndex; //在中序遍历的数组中前移
