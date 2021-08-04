@@ -1697,9 +1697,8 @@ class Solution {
 public:
     TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
         //前序遍历为空时，树也为空
-        if (preorder.empty()) {
-            return nullptr;
-        }
+        if (preorder.empty()) return nullptr;
+        
         TreeNode* root = new TreeNode(preorder[0]); //前序遍历的第一个元素是根节点
         stack<TreeNode*> stk; //栈，用于存储父节点
         stk.push(root); //先把根节点压入栈
