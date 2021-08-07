@@ -90,7 +90,8 @@ public:
 
     int coinChange(vector<int>& coins, int amount){
         if (amount == 0) return 0;
-        sort(coins.rbegin(), coins.rend());//对coins逆向排序（从大到小）
+        sort(coins.rbegin(), coins.rend()); //对coins降序排序（从大到小）
+        //sort(coins.begin(), coins.end(), greater<int>()); //也是降序排序
         coinChange(coins, amount, 0, 0, ans);
         return ans == INT_MAX ? -1 : ans;
     }
@@ -159,7 +160,7 @@ class Solution {
 public:
     int majorityElement(vector<int>& nums) {
         //因为必定存在
-        sort(nums.begin(), nums.end());
+        sort(nums.begin(), nums.end(), less<int>());
         return nums[nums.size() / 2];
     }
 };
@@ -508,7 +509,7 @@ public:
 class Solution {
 public:
     vector<int> getLeastNumbers(vector<int>& arr, int k) {
-        sort(arr.begin(), arr.end());//先排序
+        sort(arr.begin(), arr.end(), less<int>()); //先升序排序
         vector<int> ans(k);
         for(int i=0;i<k;i++){
             ans[i] = arr[i];
@@ -609,7 +610,7 @@ class Solution {
 public:
     int minIncrementForUnique(vector<int>& A) {
         int count=0, temp;
-        sort(A.begin(), A.end());
+        sort(A.begin(), A.end(), less<int>());
         for(int i=1;i<A.size();i++){
             if(A[i-1] >= A[i]){
                 temp=A[i];//保存 老A[i] 的值
@@ -1524,7 +1525,7 @@ public:
         int res = 0;
 
         //对数组排序
-        sort(nums.begin(), nums.end());
+        sort(nums.begin(), nums.end(), less<int>());
         for (int i = 0; i < n / 2; ++i) {、
             //取最大值
             res = max(res, nums[i] + nums[n - 1 - i]);
@@ -1662,7 +1663,7 @@ public:
     int triangleNumber(vector<int>& nums) {
         if(nums.size()<3) return 0;
         int result = 0;
-        sort(nums.begin(),nums.end()); //先排序
+        sort(nums.begin(),nums.end(), less<int>()); //先升序排序
         for(int i=0; i<nums.size(); i++){
             int k=i;
             for(int j=i+1; j<nums.size(); j++){
