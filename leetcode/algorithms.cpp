@@ -33,6 +33,7 @@
 题目31：有效三角形的个数（排序+双指针）
 题目32：重建二叉树（迭代）
 题目33：数值的整数次方（二分+二进制操作）
+题目34：超级丑数（小根堆、动态规划）
 =========================================*/
 
 
@@ -1744,5 +1745,63 @@ public:
             x = 1 / x;
         }
         return n_temp & 1 ? x * myPow(x * x, n_temp >> 1) : myPow(x * x, n_temp >> 1);
+    }
+};
+
+/*-------------------------------
+| 题目34：超级丑数（小根堆、动态规划）
+| 超级丑数 是一个正整数，并满足其所有质因数都出现在质数数组 primes 中。
+| 给你一个整数 n 和一个整数数组 primes ，返回第 n 个 超级丑数 。
+| 题目数据保证第 n 个 超级丑数 在 32-bit 带符号整数范围内。
+-------------------------------*/
+/* 小根堆 O(mn logmn)、O(mn) */
+class Solution {
+public:
+    int nthSuperUglyNumber(int n, vector<int>& primes) {
+        priority_queue<int, vector<int>, greater<int>> nums; //小根堆
+        nums.push(1); //最小的就是1
+
+        int count = 0, result = 0;
+        while(count<n){
+            count++;
+            result = nums.top();
+            nums.pop();
+            //需要弹干净
+            while(nums.size()>0 && nums.top() == result) nums.pop();
+
+            for(long long int prime : primes){
+                long long int temp = prime*result;
+                //prime在32bit中，不代表乘积在32bit中
+                if(temp < INT32_MAX) nums.push(temp);
+            }
+        }
+        return result;
+    }
+};
+
+/* 动态规划 O(mn)、O(m+n) */
+class Solution {
+public:
+    int nthSuperUglyNumber(int n, vector<int>& primes) {
+        vector<int> dp(n + 1); //存储n个丑数
+        dp[1] = 1;
+        int m = primes.size();
+        //指向超级丑数的数组，数组元素即将进行计算的dp数组的序号
+        vector<int> pointers(m, 1);
+        for (int i = 2; i <= n; i++) {
+            vector<int> nums(m);
+            int minNum = INT_MAX;
+            //找出计算后最小的数，即是下一个超级丑数
+            for (int j = 0; j < m; j++) {
+                nums[j] = dp[pointers[j]] * primes[j];
+                minNum = min(minNum, nums[j]);
+            }
+            dp[i] = minNum;
+            for (int j = 0; j < m; j++) {
+                //如果minNum与nums数组中的数相等，pointers就该向右移了
+                if (minNum == nums[j]) pointers[j]++;
+            }
+        }
+        return dp[n];
     }
 };
