@@ -34,6 +34,9 @@
 题目32：重建二叉树（迭代）
 题目33：数值的整数次方（二分+二进制操作）
 题目34：超级丑数（小根堆、动态规划）
+题目35：树的子结构（先序遍历+递归）
+题目36：二叉树的层序遍历（BFS）
+题目37：栈的压入、弹出序列（辅助栈）
 =========================================*/
 
 
@@ -1803,5 +1806,106 @@ public:
             }
         }
         return dp[n];
+    }
+};
+
+/*-------------------------------
+| 题目35：树的子结构（先序遍历+递归）
+| 输入两棵二叉树A和B，判断B是不是A的子结构。(约定空树不是任意一个树的子结构)
+| B是A的子结构， 即 A中有出现和B相同的结构和节点值。
+-------------------------------*/
+/* 先序遍历+递归 O(MN) O(M) */
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool isSubStructure(TreeNode* A, TreeNode* B) {
+        if(B == NULL || A == NULL)
+            return false;
+        //遍历A中每个节点，A树中任一节点包含B就能返回true
+        return iscontain(A, B) || isSubStructure(A->left, B) || isSubStructure(A->right, B);
+    }
+    //包含：以A为根的数是否包含B
+    bool iscontain(TreeNode* A, TreeNode* B){
+        if(B == NULL)
+            return true;
+        if(A == NULL || A->val != B->val)
+            return false;
+        return iscontain(A->left, B->left) && iscontain(A->right, B->right);
+    }
+};
+
+/*-------------------------------
+| 题目36：二叉树的层序遍历（BFS）
+| 给你一个二叉树，请你返回其按层序遍历得到的节点值。
+-------------------------------*/
+/* BFS O(N) O(N) */
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> ans;
+        if(root == NULL) return ans;
+        queue<TreeNode *> q; //队列
+        q.push(root); //先把根节点加入队列
+        while(!q.empty()){
+            int CurrentLevelSize = q.size();
+            ans.push_back(vector<int> ());
+            for(int i=1;i<=CurrentLevelSize;++i){
+                auto node = q.front();
+                q.pop();
+                ans.back().push_back(node->val);
+                if(node->left) q.push(node->left);
+                if(node->right) q.push(node->right);
+            }
+        }
+        return ans;
+    }
+};
+
+/*-------------------------------
+| 题目37：栈的压入、弹出序列（辅助栈）
+| 输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否为该栈的弹出顺序。假设压入栈的所有数字均不相等。
+| 例如，序列 {1,2,3,4,5} 是某栈的压栈序列，序列 {4,5,3,2,1} 是该压栈序列对应的一个弹出序列，但 {4,3,5,1,2} 就不可能是该压栈序列的弹出序列。
+-------------------------------*/
+/* 辅助栈 */
+class Solution {
+public:
+    bool validateStackSequences(vector<int>& pushed, vector<int>& popped) {
+        stack<int> temp; //辅助栈
+        int index = 0; //记录pop序号
+        for(int i=0; i<pushed.size(); i++){
+            //push数组中与pop数组不相等的，都压入栈
+            if(pushed[i] != popped[index]){
+                temp.push(pushed[i]);
+            }else{
+                index++; //相等了就处理pop的下一个数
+                //先看栈里的元素是否与pop数组的元素相等
+                for(index; index<popped.size(); index++){
+                    if(temp.size() == 0) break; //防止栈溢出
+                    //相等就弹出栈
+                    if(popped[index] == temp.top()) temp.pop();
+                    else break; //不相等就退出循环
+                }
+            }
+        }
+        //栈是空的就返回true，不空就返回false
+        if(temp.size()==0) return true;
+        else return false;
     }
 };
