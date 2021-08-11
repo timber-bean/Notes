@@ -18,7 +18,7 @@
 题目16：字符串转换整数 (自动机)
 题目17：接雨水（动态编程+栈+双指针+找规律）
 题目18：编辑距离(动态规划)
-题目19：机器人的运动范围（bfs+递推）
+题目19：机器人的运动范围（bfs、递推）
 题目20：括号生成（回溯、递归）
 题目21：乘积最大子数组（动态规划）
 题目22：x 的平方根（袖珍计算器算法、二分查找、牛顿迭代）
@@ -37,6 +37,8 @@
 题目35：树的子结构（先序遍历+递归）
 题目36：二叉树的层序遍历（BFS）
 题目37：栈的压入、弹出序列（辅助栈）
+题目38：二叉搜索树的后序遍历序列（递归分治、辅助栈）
+题目39：队列的最大值（双端队列）
 =========================================*/
 
 
@@ -1166,12 +1168,12 @@ public:
 
 
 /*-------------------------------
-| 题目19：机器人的运动范围
+| 题目19：机器人的运动范围（bfs、递推）
 | 地上有一个m行n列的方格，从坐标 [0,0] 到坐标 [m-1,n-1] 。
 | 一个机器人从坐标 [0, 0] 的格子开始移动，它每次可以向左、右、上、下移动一格（不能移动到方格外），也不能进入行坐标和列坐标的数位之和大于k的格子。
 | 例如，当k为18时，机器人能够进入方格 [35, 37] ，因为3+5+3+7=18。但它不能进入方格 [35, 38]，因为3+5+3+8=19。请问该机器人能够到达多少个格子？
 -------------------------------*/
-/* 题解——广度优先 */
+/* 广度优先 */
 class Solution {
     // 计算 x 的数位之和
     int get(int x) {
@@ -1209,13 +1211,11 @@ public:
     }
 };
 
-/* 题解——递推 */
+/* 递推 */
 class Solution {
     int get(int x) {
         int res=0;
-        for (; x; x /= 10){
-            res += x % 10;
-        }
+        for (; x; x /= 10) res += x % 10;
         return res;
     }
 public:
@@ -1907,5 +1907,94 @@ public:
         //栈是空的就返回true，不空就返回false
         if(temp.size()==0) return true;
         else return false;
+    }
+};
+
+/*-------------------------------
+| 题目38：二叉搜索树的后序遍历序列（递归分治、辅助栈）
+| 输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历结果。
+| 如果是则返回 true，否则返回 false。假设输入的数组的任意两个数字都互不相同。
+-------------------------------*/
+/* 递归分治 O(N2) O(N) */
+class Solution {
+    //判断是否是二叉检索树
+    bool verifyBTree(vector<int>& postorder, int start_index, int root_index){
+        if(start_index >= root_index) return true; //当左序号大于等于有序号时，说明遍历完了
+        int index = start_index; //记录数组下标，从start_index开始
+        while(postorder[index] < postorder[root_index]) index++; //左子树元素必比根节点小
+        int right_left = index; //表示右子树的起点，即第一个大于根节点的数组元素的序号
+        while(postorder[index] > postorder[root_index]) index++; //右子树元素必比根节点大
+
+        //index如果不等于根节点的序号意味着本次遍历未完成，左子树或右子树之一必出问题了
+        return index==root_index && verifyBTree(postorder, right_left, root_index-1) && verifyBTree(postorder, start_index, right_left-1);
+    }
+public:
+    bool verifyPostorder(vector<int>& postorder) {
+        //为空直接返回true
+        if(postorder.empty()) return true;
+        int length = postorder.size();
+        int root_index = length-1;
+        return verifyBTree(postorder, 0, root_index);
+    }
+};
+
+/* 辅助栈 O(N) O(N) */
+class Solution {
+public:
+    bool verifyPostorder(vector<int>& postorder) {
+        if(postorder.empty()) return true;
+        stack<int> aux_stack; //辅助栈
+        int parent = INT_MAX; //父节点
+        //倒序遍历、入栈（先找根节点）
+        for(int i=postorder.size()-1; i>=0; i--){
+            int current_num = postorder[i]; //当前元素
+            //辅助栈非空，且栈顶元素大于当前元素的时候，更新parent为栈顶元素，且弹出栈顶元素
+            //栈顶元素大于当前元素时，意味着出现了可以以栈顶元素为父节点的左子树
+            //先弹出的是最右、最小的右子树
+            while(!aux_stack.empty() && aux_stack.top()>current_num){
+                parent = aux_stack.top();
+                aux_stack.pop();
+            }
+            //当前元素如果大于parent，则意味着，parent的左子树出现了比父节点大的值
+            if(current_num > parent) return false;
+            aux_stack.push(current_num);
+        }
+        return true;
+    }
+};
+
+/*-------------------------------
+| 题目39：队列的最大值（双端队列）
+| 请定义一个队列并实现函数 max_value 得到队列里的最大值，要求函数max_value、push_back 和 pop_front 的均摊时间复杂度都是O(1)。
+| 若队列为空，pop_front 和 max_value 需要返回 -1。
+-------------------------------*/
+/* 双端队列 O(1) O(N) */
+class MaxQueue {
+private:
+    queue<int> q; //正式队列
+    deque<int> d; //用于记录最大值
+public:
+    MaxQueue() {}
+    
+    int max_value() {
+        if(d.empty()) return -1;
+        return d.front(); //双端队列降序排列
+    }
+    
+    void push_back(int value) {
+        //虽然把元素pop出去了，但是能保证按照队列顺序的最大值
+        while(!d.empty() && d.back() < value){
+            d.pop_back();
+        }
+        d.push_back(value);
+        q.push(value);
+    }
+
+    int pop_front() {
+        if(q.empty()) return -1;
+        int ans = q.front();
+        if(ans == d.front()) d.pop_front(); //双端队列同步pop
+        q.pop();
+        return ans;
     }
 };
