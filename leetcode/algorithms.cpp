@@ -1,15 +1,15 @@
 /* 目录 */
 /*=========================================
-题目1：零钱兑换（动态规划、剪枝+dfs）
-题目2：二叉树的直径（dfs）
+题目1：零钱兑换（动态规划、剪枝+DFS）
+题目2：二叉树的直径（DFS）
 题目3：多数元素（hash表、分治）
-题目4：岛屿的最大面积（dfs、bfs）
+题目4：岛屿的最大面积（DFS、BFS）
 题目5：反转链表（递归）
 题目6：K 个一组翻转链表（与题5对比，暴力法）
 题目7：构造最长回文串（贪心）
 题目8：验证回文字符串 Ⅱ（贪心）
 题目9：最小的k个数（大根堆）
-题目10：水壶问题（dfs、贝祖定理）
+题目10：水壶问题（DFS、贝祖定理）
 题目11：使数组唯一的最小增量（线性探测）
 题目12：按摩师（动态规划）
 题目13：单词的压缩编码（字典树）
@@ -18,7 +18,7 @@
 题目16：字符串转换整数 (自动机)
 题目17：接雨水（动态编程+栈+双指针+找规律）
 题目18：编辑距离(动态规划)
-题目19：机器人的运动范围（bfs、递推）
+题目19：机器人的运动范围（BFS、递推）
 题目20：括号生成（回溯、递归）
 题目21：乘积最大子数组（动态规划）
 题目22：x 的平方根（袖珍计算器算法、二分查找、牛顿迭代）
@@ -29,7 +29,7 @@
 题目27：避免洪水泛滥（贪心+二分查找）
 题目28：二维数组中的查找（线性查找）
 题目29：最短无序连续子数组（双指针+线性扫描）
-题目30：矩阵中的路径（dfs+剪枝）
+题目30：矩阵中的路径（DFS+剪枝）
 题目31：有效三角形的个数（排序+双指针）
 题目32：重建二叉树（迭代）
 题目33：数值的整数次方（二分+二进制操作）
@@ -39,6 +39,8 @@
 题目37：栈的压入、弹出序列（辅助栈）
 题目38：二叉搜索树的后序遍历序列（递归分治、辅助栈）
 题目39：队列的最大值（双端队列）
+题目40：数组中的第 k 大的数字（排序、大根堆）
+题目41：二叉树中和为某一值的路径（DFS）
 =========================================*/
 
 
@@ -1996,5 +1998,78 @@ public:
         if(ans == d.front()) d.pop_front(); //双端队列同步pop
         q.pop();
         return ans;
+    }
+};
+
+/*-------------------------------
+| 题目40：数组中的第 k 大的数字（排序、大根堆）
+| 给定整数数组 nums 和整数 k，请返回数组中第 k 个最大的元素。
+| 请注意，你需要找的是数组排序后的第 k 个最大的元素，而不是第 k 个不同的元素。
+-------------------------------*/
+/* 排序 O(NlogN) O(1) */
+class Solution {
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+        if(nums.empty()) return 0; //空数组直接返回0
+        sort(nums.begin(), nums.end(), greater<int>()); //降序排列
+        return nums[k-1];
+    }
+};
+
+/* 大根堆 O(N) O(N) */
+class Solution {
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+        if(nums.empty()) return 0; //空数组直接返回0
+        priority_queue<int, vector<int>, less<int>> big_q; //大根堆
+        for(int i=0; i<nums.size(); i++) big_q.push(nums[i]); //数组元素进堆
+        int result;
+        //第k个堆顶元素即是所求
+        for(int i=0; i<k; i++){
+            result = big_q.top();
+            big_q.pop();
+        }
+        return result;
+    }
+};
+
+/*-------------------------------
+| 题目41：二叉树中和为某一值的路径（DFS）
+| 输入一棵二叉树和一个整数，打印出二叉树中节点值的和为输入整数的所有路径。
+| 从树的根节点开始往下一直到叶节点所经过的节点形成一条路径。
+-------------------------------*/
+/* DFS O(N2) O(N) */
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+    //深度优先遍历，由于是void，需要时刻改变result数组，因此传递引用
+    void findSum(TreeNode* root, vector<vector<int>>& result, vector<int> temp, int sum, int target){
+        sum = sum + root->val; //求和
+        temp.emplace_back(root->val); //当前值进一维数组
+        //找到符合要求的叶子节点，让一维数组进二维数组
+        if(root->left == nullptr && root->right == nullptr && sum == target){
+            //emplace_back()比push_back()效率更高
+            result.emplace_back(temp);
+        }
+        //分别遍历左子树和右子树
+        if(root->left != nullptr) findSum(root->left, result, temp, sum, target);
+        if(root->right != nullptr) findSum(root->right, result, temp, sum, target);
+    }
+public:
+    vector<vector<int>> pathSum(TreeNode* root, int target) {
+        vector<vector<int>> result; //结果二维数组
+        if(root == nullptr) return result;
+        vector<int> temp; //临时一维数组
+        findSum(root, result, temp, 0, target); //调用深度优先遍历
+        return result;
     }
 };
