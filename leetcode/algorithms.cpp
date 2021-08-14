@@ -41,6 +41,7 @@
 题目39：队列的最大值（双端队列）
 题目40：数组中的第 k 大的数字（排序、大根堆）
 题目41：二叉树中和为某一值的路径（DFS）
+题目42：最长回文子序列（动态规划）
 =========================================*/
 
 
@@ -2071,5 +2072,33 @@ public:
         vector<int> temp; //临时一维数组
         findSum(root, result, temp, 0, target); //调用深度优先遍历
         return result;
+    }
+};
+
+/*-------------------------------
+| 题目42：最长回文子序列（动态规划）
+| 给你一个字符串 s ，找出其中最长的回文子序列，并返回该序列的长度。
+| 子序列定义为：不改变剩余字符顺序的情况下，删除某些字符或者不删除任何字符形成的一个序列。
+-------------------------------*/
+/* 动态规划 O(N2) O(N2) */
+class Solution {
+public:
+    int longestPalindromeSubseq(string s) {
+        int length = s.length(); //字符串长度
+        if(length == 0) return 0;
+        //动态规划，二维数组。
+        //横坐标是起始字符的序号，是结束字符的序号。
+        vector<vector<int>> dp(length, vector<int>(length));
+        for(int i=length-1; i>=0 ; i--){
+            dp[i][i] = 1; //自己到自己必是一个回文串
+            char s_temp = s[i];
+            for(int j=i+1; j<length ; j++){
+                //头尾的字符相等，则i到j的回文串长度为i+1到j-1回文串长度+2
+                if(s_temp == s[j]) dp[i][j] = dp[i+1][j-1] + 2;
+                //如果不相等，则等于i+1到j和i到j-1之间的最大值
+                else dp[i][j] = max(dp[i+1][j], dp[i][j-1]);
+            }
+        }
+        return dp[0][length-1]; //从头到尾的回文串数量即是最长的
     }
 };
