@@ -42,6 +42,7 @@
 题目40：数组中的第 k 大的数字（排序、大根堆）
 题目41：二叉树中和为某一值的路径（DFS）
 题目42：最长回文子序列（动态规划）
+题目43：无重复字符的最长子串（双指针）
 =========================================*/
 
 
@@ -2100,5 +2101,29 @@ public:
             }
         }
         return dp[0][length-1]; //从头到尾的回文串数量即是最长的
+    }
+};
+
+/*-------------------------------
+| 题目43：无重复字符的最长子串（双指针）
+| 给定一个字符串 s ，请你找出其中不含有重复字符的 最长子串 的长度。
+-------------------------------*/
+/* 滑动窗口双指针 O(N) O(ASCII) */
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        unordered_set<char> hash_table; //哈希表
+        int n = s.size();
+        int rk = -1, ans = 0; //rk为右指针，初始在左边界的左侧，ans记录长度
+        for(int i=0; i<n ; ++i){
+            if(i!=0) hash_table.erase(s[i-1]); //左指针移动一格，哈希表删除一个字符
+            //如果右指针指向的字符没出现过，则一直向右遍历，直到有重复的字符出现为止
+            while(rk+1<n && !hash_table.count(s[rk+1])){
+                hash_table.insert(s[rk+1]);
+                ++rk;
+            }
+            ans = max(ans, rk-i+1);
+        }
+        return ans;
     }
 };
