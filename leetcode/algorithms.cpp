@@ -43,6 +43,7 @@
 题目41：二叉树中和为某一值的路径（DFS）
 题目42：最长回文子序列（动态规划）
 题目43：无重复字符的最长子串（双指针）
+题目44：复杂链表的复制（拼接+拆分）
 =========================================*/
 
 
@@ -2125,5 +2126,74 @@ public:
             ans = max(ans, rk-i+1);
         }
         return ans;
+    }
+};
+
+/*-------------------------------
+| 题目44：复杂链表的复制（拼接+拆分）
+| 请实现 copyRandomList 函数，复制一个复杂链表。
+| 在复杂链表中，每个节点除了有一个 next 指针指向下一个节点，还有一个 random 指针指向链表中的任意节点或者 null。
+-------------------------------*/
+/* 拼接+拆分 O(N) O(1) */
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* next;
+    Node* random;
+    
+    Node(int _val) {
+        val = _val;
+        next = NULL;
+        random = NULL;
+    }
+};
+*/
+class Solution {
+    //拷贝链表，首先把顺序的链表拷贝好
+    void copyList(Node* head){
+        Node* node = head;
+        while(node != NULL){
+            Node* Clone = new Node(node->val);
+            Clone->next = node->next;
+            Clone->random = NULL;
+            node->next = Clone;
+            node = Clone->next;
+        }
+    }
+    //拷贝单个节点的random指针
+    void copyRandom(Node* head){
+        Node* node = head;
+        while(node != NULL){
+            Node* Clone = node->next;
+            if(node->random != NULL) Clone->random = node->random->next;
+            node = Clone->next;
+        }
+    }
+    //拆分构造好的链表，奇数位置上是原链表，偶数位置上是拷贝的链表
+    Node* reconnectList(Node* head){
+        Node* node = head;
+        Node* Clone = NULL;
+        Node* pHead = NULL; //记录拷贝链表的头部元素，用于返回值
+        if(node != NULL){
+            pHead = Clone = node->next;
+            node->next = Clone->next;
+            node = node->next;
+        }
+        while(node != NULL){
+            Clone->next = node->next;
+            Clone = Clone->next;
+            node->next = Clone->next;
+            node = node->next;
+        }
+        return pHead;
+    }
+public:
+    Node* copyRandomList(Node* head) {
+        if(head == NULL) return NULL;
+        copyList(head);
+        copyRandom(head);
+        return reconnectList(head);  
     }
 };
