@@ -14,7 +14,7 @@
 题目12：卡牌分组
 题目13：旋转矩阵
 题目14：两数之和（hash表）
-题目15：二叉树的层序遍历（队列）
+题目15：
 题目16：只出现一次的数字（位运算——异或）
 题目17：和为K的子数组（前缀和+hash表/映射表）
 题目18：反转链表II
@@ -619,41 +619,10 @@ public:
 
 
 /*-------------------------------
-| 题目15：二叉树的层序遍历
-| 给你一个二叉树，请你返回其按层序遍历得到的节点值。（即逐层地，从左到右访问所有节点）。
+| 题目15：
+| 
 -------------------------------*/
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
- * };
- */
-/* 队列 */
-class Solution {
-public:
-    vector<vector<int>> levelOrder(TreeNode* root) {
-        vector<vector<int>> ans; // 储存最后结果
-        if(root == NULL) return ans;
-        
-        queue<TreeNode *> q; // 储存节点
-        q.push(root); // 先让根节点进
-        while(!q.empty()){
-            int CurrentLevelSize = q.size(); // 当前层次元素的个数
-            ans.push_back(vector<int> ());
-            for(int i=1;i<=CurrentLevelSize;++i){
-                auto node = q.front();
-                q.pop(); // 已有 node 承接，便可弹出该节点
-                ans.back().push_back(node->val); // ans 数组的最后一个一维数组承接新点
-                if(node->left) q.push(node->left);
-                if(node->right) q.push(node->right);
-            }
-        }
-        return ans;
-    }
-};
+
 
 
 /*-------------------------------

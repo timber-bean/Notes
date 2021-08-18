@@ -44,6 +44,7 @@
 题目42：最长回文子序列（动态规划）
 题目43：无重复字符的最长子串（双指针）
 题目44：复杂链表的复制（拼接+拆分）
+题目45：二叉搜索树与双向链表（DFS中序遍历）
 =========================================*/
 
 
@@ -284,17 +285,31 @@ public:
  *     ListNode(int x) : val(x), next(NULL) {}
  * };
 **/
-
-/* 题解——递归 */
+/* 递归 O(N) O(N) */
 class Solution {
 public:
     ListNode* reverseList(ListNode* head) {
         if(head==NULL || head->next==NULL) return head;
         ListNode* ansList;
         ansList = reverseList(head->next);
-        head->next->next = head;//很重要
-        head->next=NULL;
+        head->next->next = head; //很重要
+        head->next = NULL;
         return ansList;
+    }
+};
+
+/* 迭代 O(N) O(1) */
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        ListNode* prev = nullptr; //前驱节点，必须要初始化一个明确值，空值也可
+        while(head){
+            ListNode* temp = head->next; //临时节点，用于保存下一个节点
+            head->next = prev; //当前节点的下一个指向前驱节点，反转的第一步
+            prev = head; //更新前驱节点为当前节点
+            head = temp; //当前节点指向下一节点
+        }
+        return prev;
     }
 };
 
@@ -1869,11 +1884,11 @@ public:
         queue<TreeNode *> q; //队列
         q.push(root); //先把根节点加入队列
         while(!q.empty()){
-            int CurrentLevelSize = q.size();
+            int CurrentLevelSize = q.size(); //当前层次的元素个数
             ans.push_back(vector<int> ());
             for(int i=1;i<=CurrentLevelSize;++i){
-                auto node = q.front();
-                q.pop();
+                auto node = q.front(); //当前根元素
+                q.pop(); //需要把根弹出来
                 ans.back().push_back(node->val);
                 if(node->left) q.push(node->left);
                 if(node->right) q.push(node->right);
@@ -2195,5 +2210,58 @@ public:
         copyList(head);
         copyRandom(head);
         return reconnectList(head);  
+    }
+};
+
+/*-------------------------------
+| 题目45：二叉搜索树与双向链表（DFS中序遍历）
+| 输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的循环双向链表。
+| 要求不能创建任何新的节点，只能调整树中节点指针的指向。
+-------------------------------*/
+/* DFS中序遍历 O(N) O(N) */
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* left;
+    Node* right;
+
+    Node() {}
+
+    Node(int _val) {
+        val = _val;
+        left = NULL;
+        right = NULL;
+    }
+
+    Node(int _val, Node* _left, Node* _right) {
+        val = _val;
+        left = _left;
+        right = _right;
+    }
+};
+*/
+class Solution {
+private:
+    Node* head, *pre; //头节点，前驱节点
+    void dfs(Node* cur){
+        if(cur == nullptr) return;
+        dfs(cur->left);
+        //如果前驱节点不为空，那么让pre的右指针指向当前节点
+        if(pre != nullptr) pre->right = cur;
+        else head = cur; //最左是最小，也就是头节点
+        cur->left = pre; //当前元素的左指针指向前驱节点
+        pre = cur; //记录当前节点为前驱节点
+        dfs(cur->right);
+    }
+public:
+    Node* treeToDoublyList(Node* root) {
+        if(root == nullptr) return nullptr;
+        dfs(root); //中序遍历二叉树
+        //把头尾节点的两个链连起来
+        head->left = pre;
+        pre->right = head;
+        return head;
     }
 };
