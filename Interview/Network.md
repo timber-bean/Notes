@@ -91,3 +91,13 @@
   * POST：给服务器添加信息
   * HEAD：对HTTP报文进行响应，不返回请求对象，主要作用是调试
   * CONNECT：用于代理服务器
+
+# GET和POST
+
+* GET把参数包含在url中，POST通过request body传递参数
+* GET在浏览器回退是无害的，而POST会再次提交请求
+* GET请求会被浏览器主动cache，而POST不会，除非手动设置
+* GET请求只能进行url编码，而POST支持多种编码方式
+* GET请求参数会被完整的保留在浏览器历史记录里，而POST中的参数不会被保留
+* GET请求在url中有长度限制，而POST没有
+* GET只接受ASCII字符，而POST可以接受任意字符
