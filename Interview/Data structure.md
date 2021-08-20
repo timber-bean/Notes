@@ -174,13 +174,11 @@
 
 ​	模式串：abaabac
 
-​	则next[0] = 0（默认），next[1] = 0，next[2] = 1，next[3] = 1，next[4] = 2，next[5] = 3，next[6] = 0
+​	则next[0] = 0（默认），next[1] = 0，next[2] = 1，next[3] = 1，next[4] = 2，next[5] = 2，next[6] = 3，next[7] = 4
 
-​	{ next[3]是因为'a'和'a'相同，next[4]是因为'ab'和'ab'相同，next[5]是因为'aba'和'aba'相同 }
+​	{ next[4]是因为'a'和'a'相同，所以若第4个字符比较失败，则移动模式串的第2个字符继续比较；next[6]是因为'ab'和'ab'相同，所以若第6个字符比较失败，则移动模式串的第3个字符继续比较}
 
-​	主串：abadabaabac
 
-​				abaa（'a'与'd'不匹配，此时，取next[2]的值）
 
 
 

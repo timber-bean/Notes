@@ -1814,7 +1814,7 @@ public:
 | 实现 pow(x, n) ，即计算 x 的 n 次幂函数（即，xn）。
 | 不得使用库函数，同时不需要考虑大数问题。
 -------------------------------*/
-/* 二分+二进制操作 */
+/* 二分+二进制操作 O(logN) O(1) */
 class Solution {
 public:
     double myPow(double x, int n) {
@@ -1824,6 +1824,7 @@ public:
             n_temp = -n_temp；
             x = 1 / x;
         }
+        //末位是1代表奇数
         return n_temp & 1 ? x * myPow(x * x, n_temp >> 1) : myPow(x * x, n_temp >> 1);
     }
 };
