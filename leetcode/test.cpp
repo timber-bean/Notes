@@ -8,6 +8,8 @@
 using namespace std;
 
 int main(){
-    for(int i=0;i+20;i--)
-    cout<<"hello"<<endl;
+    string a;
+    for(int i=0; i<10; ++i) a+='0';
+    cout<<a<<endl;
+    return 0;
 }
