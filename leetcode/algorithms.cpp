@@ -48,6 +48,7 @@
 题目46：复杂链表的复制（拼接+拆分）
 题目47：二叉搜索树与双向链表（DFS中序遍历）
 题目48：旋转数组的最小数字（二分查找）
+题目49：字符串的排列（动态规划）
 =========================================*/
 
 
@@ -2346,5 +2347,42 @@ public:
             else --high;
         }
         return numbers[low]; //低置位元素即是最小
+    }
+};
+
+/*-------------------------------
+| 题目49：字符串的排列（动态规划）
+| 输入一个字符串，打印出该字符串中字符的所有排列。
+| 你可以以任意顺序返回这个字符串数组，但里面不能有重复元素。 
+-------------------------------*/
+/* 动态规划 O(n*n!) O(N) */
+class Solution {
+public:
+    //排列函数，不断递归，把每一个字符依次放到首位，第二位到末位的字符进行排列
+    void permutation(string s, int begin, vector<string>& res){
+        if(begin == s.size()-1) return; //只剩一个元素了，没法排列了
+        if(!res.empty()) res.pop_back(); //排除重复元素，因为循环中i从begin开始
+        vector<int> mycount = vector<int>(26, 0); //记录字符串中重复的字符
+        for(int i=begin; i<s.size(); ++i){
+            //如果对应字符的数目超过1，意味着重复了，继续循环
+            if(mycount[s[i]-'a'] >= 1) continue;
+            ++mycount[s[i]-'a']; //否则，该字符的数目+1
+            swap(s[begin], s[i]); //交换首位元素与当前元素
+            res.push_back(s); //把当前字符串加入到结果数组中
+            permutation(s, begin+1, res); //对除首位元素的其他元素，进行排列
+        }
+    }
+
+    vector<string> permutation(string s) {
+        vector<string> result; //记录结果
+        if(s == "") return result; //字符串是空，直接返回空数组
+        //字符串长度为一，就是只有一个字符，只有一种排列，把s放到数组，返回数组即可
+        if(s.length() == 1){
+            result.push_back(s);
+            return result;
+        }
+        //调用排列函数，找到排列数组
+        permutation(s, 0, result);
+        return result;
     }
 };
