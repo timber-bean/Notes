@@ -115,7 +115,7 @@ public:
 
 
 /*-------------------------------
-| 题目2：二叉树的直径
+| 题目2：二叉树的直径（DFS）
 | 给定一棵二叉树，你需要计算它的直径长度。
 | 一棵二叉树的直径长度是任意两个结点路径长度中的最大值。
 | 这条路径可能穿过根结点。
@@ -130,16 +130,16 @@ public:
  * };
  */
 
-/*我的方法——递归求深度，也是深度优先搜索（dfs） */
+/* DFS O(N) O(Height) */
 class Solution {
     int count = 0;//记录直径
 public:
     int dp(TreeNode* root, int& count){
         if(root == NULL) return 0;
-        int left_depth = dp(root->left, count);
-        int right_depth = dp(root->right, count);
-        int count_temp = left_depth + right_depth;
-        count = (count_temp > count) ? count_temp : count;//记录直径最大值
+        int left_depth = dp(root->left, count); //左子树深度
+        int right_depth = dp(root->right, count); //右子树深度
+        int count_temp = left_depth + right_depth; //左子树节点到右子树节点的距离
+        count = (count_temp > count) ? count_temp : count; //记录直径最大值
         return (left_depth >= right_depth ? left_depth  : right_depth) + 1;
     }
     int diameterOfBinaryTree(TreeNode* root) {
