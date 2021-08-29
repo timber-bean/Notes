@@ -49,6 +49,7 @@
 题目47：二叉搜索树与双向链表（DFS中序遍历）
 题目48：旋转数组的最小数字（二分查找）
 题目49：字符串的排列（动态规划）
+题目50：把数组排成最小的数（快排）
 =========================================*/
 
 
@@ -2385,5 +2386,39 @@ public:
         //调用排列函数，找到排列数组
         permutation(s, 0, result);
         return result;
+    }
+};
+
+/*-------------------------------
+| 题目50：把数组排成最小的数（快排）
+| 输入一个非负整数数组，把数组里所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。
+-------------------------------*/
+/* 快排 O(N logN) O(N) */
+class Solution {
+public:
+    //快排
+    void QuickSort(vector<string>& s, int l, int r){
+        if(l >= r) return;
+        int i = l, j = r;
+        while(i<j){
+            while(s[j]+s[l] >= s[l]+s[j] && i<j) j--;
+            while(s[i]+s[l] <= s[l]+s[i] && i<j) i++;
+            swap(s[i], s[j]);
+        }
+        swap(s[i], s[l]);
+        QuickSort(s, l, j-1);
+        QuickSort(s, i+1, r);
+    }
+    string minNumber(vector<int>& nums) {
+        vector<string> strs;
+        //把int转为string放入string的vector
+        for(int i=0; i<nums.size(); ++i){
+            strs.push_back(to_string(nums[i]));
+        }
+        //对vector里的元素排序
+        QuickSort(strs, 0, strs.size()-1);
+        string res;
+        for(string str : strs) res.append(str);
+        return res;
     }
 };
