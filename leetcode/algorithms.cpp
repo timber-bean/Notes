@@ -50,6 +50,7 @@
 题目48：旋转数组的最小数字（二分查找）
 题目49：字符串的排列（动态规划）
 题目50：把数组排成最小的数（快排）
+题目51：链表中环的入口节点（快慢指针）
 =========================================*/
 
 
@@ -2420,5 +2421,50 @@ public:
         string res;
         for(string str : strs) res.append(str);
         return res;
+    }
+};
+
+/*-------------------------------
+| 题目51：链表中环的入口节点（快慢指针）
+| 给定一个链表，返回链表开始入环的第一个节点。 
+| 从链表的头节点开始沿着 next 指针进入环的第一个节点为环的入口节点。如果链表无环，则返回 null。
+| 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 
+| 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。
+| 
+| 说明：不允许修改给定的链表。
+-------------------------------*/
+/* 快慢指针 O(N) O(1) */
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        if(head == nullptr || head->next == nullptr) return NULL;
+        ListNode *slow = head, *fast = head;
+        do{ //判断是否存在环
+            if(fast->next != nullptr && fast->next->next != nullptr){
+                slow = slow->next;
+                fast = fast->next->next;
+            }
+            else return NULL;
+        }while(slow != fast);
+
+        //以下是精髓。
+        //设slow在环内走了x步，共走了n步，则在环外走了n-x步，也就意味着，slow再走n-x步，则在环内走了n步
+        //而根据fast比slow多走了n步，且fast多走的都在环内部，因此，n是环长度的倍数
+        //因此，slow再走n-x步，即再环内走了n步，就能回到环的起点了
+        //又由于slow在环外走了n-x步，因此，从头节点到环起点也为n-x步
+        fast = head;
+        while(fast != slow){
+            fast = fast->next;
+            slow = slow->next;
+        }
+        return slow;
     }
 };
