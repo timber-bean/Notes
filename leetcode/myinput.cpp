@@ -1,7 +1,8 @@
 #include <iostream>
 #include <cstring>
 #include <vector>
-#include<algorithm>
+#include <algorithm>
+#include <utility> //pair的头文件
 
 using namespace std;
 

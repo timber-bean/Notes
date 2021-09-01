@@ -152,12 +152,11 @@ public:
 
 
 /*-------------------------------
-| 题目3：多数元素
+| 题目3：多数元素（哈希表、排序、分治）
 | 给定一个大小为 n 的数组，找到其中的多数元素。多数元素是指在数组中出现次数大于 ⌊ n/2 ⌋ 的元素。
 | 假设数组是非空的，并且给定的数组总是存在多数元素。
 -------------------------------*/
-
-/* 暴力求解——hash表 */
+/* hash表 */
 class Solution {
 public:
     int majorityElement(vector<int>& nums) {
@@ -174,7 +173,7 @@ public:
     }
 };
 
-/* 题解——排序 */
+/* 排序 */
 class Solution {
 public:
     int majorityElement(vector<int>& nums) {
@@ -184,7 +183,7 @@ public:
     }
 };
 
-/* 题解——分治（递归） */
+/* 分治（递归） */
 class Solution {
     int count_in_range(vector<int>& nums, int target, int begin, int end) {
         int count = 0;
