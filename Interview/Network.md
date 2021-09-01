@@ -106,13 +106,13 @@
 
 # GET和POST的区别
 
-* GET把参数包含在url中，POST通过request body传递参数
-* GET在浏览器回退是无害的，而POST需要再次提交请求
-* GET请求会被浏览器主动cache，而POST不会，除非手动设置
-* GET请求只能进行url编码，而POST支持多种编码方式
-* GET请求参数会被完整的保留在浏览器历史记录里，而POST中的参数不会被保留
-* GET请求在url中有长度限制，而POST没有
-* GET只接受ASCII字符，而POST可以接受任意字符
+* 参数位置：GET把参数包含在url中，POST通过request body传递参数
+* 浏览器回退：GET在浏览器回退是无害的，而POST需要再次提交请求
+* 浏览器缓存：GET请求会被浏览器主动cache，而POST不会，除非手动设置
+* 浏览器历史记录：GET请求参数会被完整的保留在浏览器历史记录里，而POST中的参数不会被保留
+* 编码方式：GET请求只能进行url编码，而POST支持多种编码方式
+* 长度限制：GET请求在url中有长度限制，而POST没有
+* 字符限制：GET只接受ASCII字符，而POST可以接受任意字符
 
 # Cookie和Session
 
