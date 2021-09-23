@@ -356,3 +356,73 @@ valgrind ./test.out
 * **浅拷贝**：只是增加了一个**指针**，该指针指向已存在的内存地址。（A变，B也变。）
 
 * **深拷贝**：增加了一个指针并且申请了一个**新的内存**，指针指向新的内存。（A变，B不变。）
+
+# 网络编程
+
+* TCP提供基于IP环境下的数据可靠性传输，事先需要进行**三次握手**来确保数据传输的可靠性。
+
+## socket
+
+* socket是套接字，用于描述**地址**和**端口**，是一个通信链的句柄。应用程序通过socket向网络发出请求或响应。
+* socket编程有三种
+  * 流式套接字（SOCK_STREAM）：基于TCP的socket编程
+  * 数据报套接字（SOCK_DGRAM）
+  * 原始套接字（SOCK_RAW）
+
+## C/S模式
+
+* TCP/IP通信中，主要是进行C/S交互。（client/server模式）
+* 服务端
+  * 建立socket，声明自己的**IP**和**端口**，并绑定到socket，使用listen监听，然后不断用accept去查看是否有连接。
+  * 如果有，捕获socket，并通过recv获取消息的内容，通信完成后，调用closeSocket关闭对这个accept到的socket。如果不需要等待任何客户端连接，那么用closeSocket直接关闭自身的socket。
+* 客户端
+  * 建立socket：通过**IP**和**端口号**确定目标服务器，使用Connect连接到服务器，send发送消息，等待处理，通信完成后，调用closeSocket关闭socket。
+
+## socket编程
+
+```C++
+#include <winsock.h>
+
+/*---------server-----------*/
+WSADATA wsaData;
+WSAStartup(0x0202, &wsaData); //初始化套接字库
+
+//创建套接字。AF_INET指明使用TCP/IP协议族，SOCK_STREAM，IPPROTO_TCP具体指明使用TCP协议
+sListen = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+//绑定套接字到一个IP地址和一个端口上
+bind(sListen, (struct sockaddr *) &local, sizeof(SOCKADDR_IN));
+
+//将套接字设置为监听模式等待连接请求
+listen(sListen, 1);
+
+//请求到来后，接受连接请求，返回一个新的对应于此次连接的套接字
+sClient = accept(sListen, (struct sockaddr *) &client, &iaddrSize);
+
+//用返回的套接字和客户端进行通信
+ret = recv(sClient, szMessage, MSGSIZE, 0);
+
+//等待另一个连接请求
+
+closeSocket(); //关闭套接字
+WSACleanup(); //关闭加载的套接字库
+/*----------------------------------*/
+
+/*--------------client--------------*/
+WSADATA wsaData;
+WSAStartup(0x0202, &wsaData); //初始化套接字库
+
+//创建套接字。AF_INET指明使用TCP/IP协议族，SOCK_STREAM，IPPROTO_TCP具体指明使用TCP协议
+sClinet = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+//向服务器发出连接请求
+connect(sClient, (struct sockaddr *) &server, sizeof(SOCKADDR_IN)); //server保存了远程服务器的地址信息
+
+//和服务器进行通信
+send(sClient, szMessage, strlen(szMessage), 0); //szMessage指明待发送数据的保存地址 ；strlen(szMessage)指明数据长度
+
+closesocket(sClient); //关闭套接字
+WSACleaup(); //关闭加载的套接字库
+/*---------------------------------*/
+```
+
