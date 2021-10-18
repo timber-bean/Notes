@@ -238,7 +238,7 @@ overload（重载）、override（重写）、overwrite（覆盖）的区别。
 
 # 内存分配
 
-![memory1](F:\Notes\Interview\pic\memory1.png)
+![memory1](.\pic\memory1.png)
 
 * 栈：存储局部变量，效率高，操作系统和编译器自动分配
 * 堆：malloc分配
